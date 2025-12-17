@@ -4,6 +4,18 @@
     <ClCompile Include="C:\Users\enola\OneDrive\Desktop\Githubplateforme\2026\CPP\2048-tile-twister\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\enola\OneDrive\Desktop\Githubplateforme\2026\CPP\2048-tile-twister\src\Tile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\enola\OneDrive\Desktop\Githubplateforme\2026\CPP\2048-tile-twister\src\Grid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\enola\OneDrive\Desktop\Githubplateforme\2026\CPP\2048-tile-twister\src\Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\enola\OneDrive\Desktop\Githubplateforme\2026\CPP\2048-tile-twister\src\Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\enola\OneDrive\Desktop\Githubplateforme\2026\CPP\2048-tile-twister\CMakeLists.txt" />
