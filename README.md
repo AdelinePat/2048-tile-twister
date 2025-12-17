@@ -1,29 +1,28 @@
 # 2048-tile-twister
 Simple Tile Twister game in C++
 
-## Arborescence du projet
+## project architecture
 
 ```
 2048-tile-twister/
-│   main.cpp
 │   README.md
 │   LICENSE
 ├── include/
 ├── src/
+|   |── main.cpp
 │   ├── core/
 │   │   ├── Game.h/.cpp
 │   │   ├── Grid.h/.cpp
 │   │   └── Tile.h/.cpp
-│   └── sdl/
+│   └── views/
 │       ├── Window.h/.cpp
 │       ├── GameObject.h/.cpp
 │       ├── TileView.h/.cpp
 │       ├── GridView.h/.cpp
-│       ├── AnimationManager.h/.cpp
 │       └── InputManager.h/.cpp
 ```
 
-## Diagramme de classes (Mermaid)
+## class diagram (Mermaid)
 
 ```mermaid
 classDiagram
@@ -66,9 +65,6 @@ classDiagram
 	class GridView {
 		+void render()
 	}
-	class AnimationManager {
-		+void animateMove()
-	}
 	class InputManager {
 		+Direction getInput()
 	}
@@ -77,7 +73,6 @@ classDiagram
 	Window --> GameObject
 	TileView --|> GameObject
 	GridView --|> GameObject
-	Window --> AnimationManager
 	Window --> InputManager
 	Window --> GridView
 	GridView --> TileView
@@ -85,7 +80,7 @@ classDiagram
 ## Inner workings
 
 The core classes (Game, Grid, Tile) manage the state and rules of the game. They do not depend on SDL or rendering code.
-The SDL classes (Window, GameObject, GridView, TileView, etc.) are responsible for displaying the game and handling user input. They depend on the core classes to get the current state of the game.
+The SDL "Views" classes (Window, GameObject, GridView, TileView, etc.) are responsible for displaying the game and handling user input. They depend on the core classes to get the current state of the game.
 
 The main loop (in main.cpp or Window) creates an instance of the Game class (from core).
 The GridView and TileView classes (in sdl) receive a reference or pointer to the Grid and Tile objects (from core) to render the current state.
