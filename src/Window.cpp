@@ -62,17 +62,9 @@ void Window::handleEvents() {
 void Window::loop() {
      while (running) {
         handleEvents();
-
-        SDL_SetRenderDrawColor(renderer, 200, 200, 255, 255);
-        SDL_RenderClear(renderer);
-
-       
-        game.getGrid().render(renderer);
-
-        SDL_RenderPresent(renderer);
-
+         render(); 
         if (!game.isGameOver()) {
-            
+             //TODO : window game over to implant
         }
 
         SDL_Delay(16);
