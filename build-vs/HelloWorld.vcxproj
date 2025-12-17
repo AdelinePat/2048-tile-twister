@@ -335,6 +335,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\enola\OneDrive\Desktop\Githubplateforme\2026\CPP\2048-tile-twister\src\main.cpp" />
     <ClCompile Include="C:\Users\enola\OneDrive\Desktop\Githubplateforme\2026\CPP\2048-tile-twister\src\Tile.cpp" />
     <ClCompile Include="C:\Users\enola\OneDrive\Desktop\Githubplateforme\2026\CPP\2048-tile-twister\src\Grid.cpp" />
+    <ClCompile Include="C:\Users\enola\OneDrive\Desktop\Githubplateforme\2026\CPP\2048-tile-twister\src\Window.cpp" />
+    <ClCompile Include="C:\Users\enola\OneDrive\Desktop\Githubplateforme\2026\CPP\2048-tile-twister\src\Game.cpp" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

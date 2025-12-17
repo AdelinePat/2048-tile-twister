@@ -13,6 +13,8 @@ add_executable(HelloWorld
     src/main.cpp
     src/Tile.cpp
     src/Grid.cpp
+    src/Window.cpp
+    src/Game.cpp
 )
 
 # Lier SDL3
