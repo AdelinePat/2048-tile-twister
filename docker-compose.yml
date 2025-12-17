@@ -1,0 +1,30 @@
+services:
+  sdl2-windows:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        TARGET_PLATFORM: windows
+    volumes:
+      - type: bind
+        source: ./
+        target: /app
+    container_name: sdl2-windows-builder
+    environment:
+      - TARGET_PLATFORM=windows
+      - PROJECT_NAME=2048
+    
+  sdl2-linux:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        TARGET_PLATFORM: linux
+    volumes:
+      - type: bind
+        source: ./
+        target: /app
+    container_name: sdl2-linux-builder
+    environment:
+      - TARGET_PLATFORM=linux
+      - PROJECT_NAME=2048

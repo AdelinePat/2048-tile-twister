@@ -39,3 +39,13 @@
 
 # debug information files
 *.dwo
+
+**/*build
+
+**/*build-vs
+
+**/*dist-windows
+
+**/*SDL3
+
+**/*.vscode
