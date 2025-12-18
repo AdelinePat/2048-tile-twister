@@ -11,73 +11,69 @@ Grid::Grid() {
 bool Grid::move(Direction dir) {
   bool moved = false;
 
+  auto slideAndMerge = [&](auto get, auto set) {
+    for (int i = 0; i < 4; ++i) {
+      // Slide tiles
+      int pos = 0;
+      for (int j = 0; j < 4; ++j) {
+        Tile* t = get(i, j);
+        if (t) {
+          if (j != pos) {
+            set(i, pos, t);
+            set(i, j, nullptr);
+            t->setPosition(
+                (dir == Direction::LEFT || dir == Direction::RIGHT) ? i : pos,
+                (dir == Direction::LEFT || dir == Direction::RIGHT) ? pos : i);
+            moved = true;
+          }
+          pos++;
+        }
+      }
+      // Merge tiles
+      for (int j = 0; j < 3; ++j) {
+        Tile* t1 = get(i, j);
+        Tile* t2 = get(i, j + 1);
+        if (t1 && t2 && t1->getValue() == t2->getValue()) {
+          t1->setValue(t1->getValue() * 2);
+          delete t2;
+          set(i, j + 1, nullptr);
+          moved = true;
+        }
+      }
+      // Slide again after merge
+      pos = 0;
+      for (int j = 0; j < 4; ++j) {
+        Tile* t = get(i, j);
+        if (t) {
+          if (j != pos) {
+            set(i, pos, t);
+            set(i, j, nullptr);
+            t->setPosition(
+                (dir == Direction::LEFT || dir == Direction::RIGHT) ? i : pos,
+                (dir == Direction::LEFT || dir == Direction::RIGHT) ? pos : i);
+          }
+          pos++;
+        }
+      }
+    }
+  };
+
   switch (dir) {
     case Direction::LEFT:
-      for (int i = 0; i < 4; i++) {
-        int target = 0;
-        for (int j = 0; j < 4; j++) {
-          if (tiles[i][j] != nullptr) {
-            if (j != target) {
-              tiles[i][target] = tiles[i][j];
-              tiles[i][target]->setPosition(i, target);  // upload
-              tiles[i][j] = nullptr;
-              moved = true;
-            }
-            target++;
-          }
-        }
-      }
+      slideAndMerge([&](int i, int j) { return tiles[i][j]; },
+                    [&](int i, int j, Tile* t) { tiles[i][j] = t; });
       break;
-
     case Direction::RIGHT:
-      for (int i = 0; i < 4; i++) {
-        int target = 3;
-        for (int j = 3; j >= 0; j--) {
-          if (tiles[i][j] != nullptr) {
-            if (j != target) {
-              tiles[i][target] = tiles[i][j];
-              tiles[i][target]->setPosition(i, target);  // upload
-              tiles[i][j] = nullptr;
-              moved = true;
-            }
-            target--;
-          }
-        }
-      }
+      slideAndMerge([&](int i, int j) { return tiles[i][3 - j]; },
+                    [&](int i, int j, Tile* t) { tiles[i][3 - j] = t; });
       break;
-
     case Direction::UP:
-      for (int j = 0; j < 4; j++) {
-        int target = 0;
-        for (int i = 0; i < 4; i++) {
-          if (tiles[i][j] != nullptr) {
-            if (i != target) {
-              tiles[target][j] = tiles[i][j];
-              tiles[target][j]->setPosition(target, j);  // upload
-              tiles[i][j] = nullptr;
-              moved = true;
-            }
-            target++;
-          }
-        }
-      }
+      slideAndMerge([&](int i, int j) { return tiles[j][i]; },
+                    [&](int i, int j, Tile* t) { tiles[j][i] = t; });
       break;
-
     case Direction::DOWN:
-      for (int j = 0; j < 4; j++) {
-        int target = 3;
-        for (int i = 3; i >= 0; i--) {
-          if (tiles[i][j] != nullptr) {
-            if (i != target) {
-              tiles[target][j] = tiles[i][j];
-              tiles[target][j]->setPosition(target, j);  // upload
-              tiles[i][j] = nullptr;
-              moved = true;
-            }
-            target--;
-          }
-        }
-      }
+      slideAndMerge([&](int i, int j) { return tiles[3 - j][i]; },
+                    [&](int i, int j, Tile* t) { tiles[3 - j][i] = t; });
       break;
   }
 
