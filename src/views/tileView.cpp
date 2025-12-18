@@ -9,7 +9,7 @@ TileView::TileView(int x, int y, int width, int height, int value)
     : GameObject(x, y, width, height), value(value) {}
 
 void TileView::setValue(int newValue) { this->value = newValue; }
-int TileView::getValue() { return this->value; }
+int TileView::getValue() const { return this->value; }
 
 void TileView::render(SDL_Renderer* renderer) {
   // Draw tile rectangle
