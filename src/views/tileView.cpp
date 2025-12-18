@@ -18,6 +18,9 @@ void TileView::render(SDL_Renderer* renderer) {
   // Draw value as text (requires SDL_ttf)
   if (value > 0) {
     TTF_Font* font = TTF_OpenFont("./assets/Roboto-Bold.ttf", height / 2);
+    if (!font) {
+    std::cerr << "Failed to load font: " << SDL_GetError() << std::endl;
+}
     if (font) {
       SDL_Color textColor = {50, 50, 50, 255};
       std::string valStr = std::to_string(value);

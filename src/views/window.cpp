@@ -3,22 +3,28 @@
 
 #include <iostream>
 #include <vector>
+#include <SDL3_ttf/SDL_ttf.h>
 
 #include "gridView.hpp"
 #include "tileView.hpp"
 
+
 Window::Window()
-    : window(nullptr), renderer(nullptr), running(true), gridView(nullptr) {}
+  : window(nullptr), renderer(nullptr), running(true), gridView(nullptr) {}
 
 Window::~Window() {
   if (gridView) delete gridView;
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
+  TTF_Quit();
   SDL_Quit();
 }
 
 void Window::init() {
   SDL_Init(SDL_INIT_VIDEO);
+  if (TTF_Init() < 0) {
+    std::cerr << "TTF_Init failed: " << SDL_GetError() << std::endl;
+  }
   window =
       SDL_CreateWindow("2048 - Tile Twister", 640, 480, SDL_WINDOW_RESIZABLE);
   renderer = SDL_CreateRenderer(window, nullptr);
