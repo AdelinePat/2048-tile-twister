@@ -12,6 +12,8 @@ class Window {
   GridView* gridView;
   bool running;
 
+  void renderMessage(const std::string& message); 
+
  public:
   Window();
   ~Window();

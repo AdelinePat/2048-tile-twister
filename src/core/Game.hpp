@@ -9,5 +9,6 @@ class Game {
  void move(Direction dir); 
   void addRandomTile();
   bool isGameOver() const;
+  bool hasWon() const;
   Grid& getGrid();
 };
