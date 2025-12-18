@@ -7,8 +7,16 @@ class GameObject {
 
  public:
   GameObject(int x, int y, int width, int height);
+  /**
+   * @brief Virtual destructor
+   */
   virtual ~GameObject() = default;
-  virtual void render(SDL_Renderer* renderer) = 0;
+  /**
+   * @brief Render the object (pure virtual)
+   * @param renderer SDL renderer
+   */
+  virtual void render(
+      SDL_Renderer* renderer) = 0;
   int getX();
   int getY();
   int getWidth();

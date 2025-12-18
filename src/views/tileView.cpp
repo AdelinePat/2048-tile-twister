@@ -15,7 +15,7 @@ void TileView::render(SDL_Renderer* renderer) {
   // Draw tile rectangle
   SDL_FRect rect = {static_cast<float>(x), static_cast<float>(y),
                     static_cast<float>(width), static_cast<float>(height)};
-  SDL_SetRenderDrawColor(renderer, 200, 180, 140, 255);  // Example color
+  SDL_SetRenderDrawColor(renderer, 200, 180, 140, 255);  // tile color
   SDL_RenderFillRect(renderer, &rect);
   SDL_SetRenderDrawColor(renderer, 120, 110, 90, 255);
   SDL_RenderRect(renderer, &rect);
