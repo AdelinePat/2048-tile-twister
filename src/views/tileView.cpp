@@ -22,7 +22,7 @@ void TileView::render(SDL_Renderer* renderer) {
 
   // Draw value as text (requires SDL_ttf)
   if (value > 0) {
-    TTF_Font* font = TTF_OpenFont("./assets/Roboto-Bold.ttf", height / 2);
+    TTF_Font* font = TTF_OpenFont("./assets/Roboto-Bold.ttf", height / 3);
     if (!font) {
       std::cerr << "Failed to load font: " << SDL_GetError() << std::endl;
     }

@@ -10,6 +10,11 @@ enum class Direction { UP, DOWN, LEFT, RIGHT };
 class Grid {
  private:
   Tile* tiles[4][4];
+  void slideTiles(Direction dir, bool& moved);
+  void slideLeft(bool& moved);
+  void slideRight(bool& moved);
+  void slideUp(bool& moved);
+  void slideDown(bool& moved);
 
  public:
   Grid();
@@ -17,10 +22,10 @@ class Grid {
   bool isCellEmpty() const;
   bool canMerge() const;
   bool canMove() const;
-  void moveLeft();
-  void moveRight();
-  void moveUp();
-  void moveDown();
+  void mergeLeft();
+  void mergeRight();
+  void mergeUp();
+  void mergeDown();
   void mergeTiles(Direction dir);
   void addTile(Tile* tile);
   void addRandomTile();

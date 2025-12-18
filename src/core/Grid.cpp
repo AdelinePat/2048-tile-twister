@@ -2,7 +2,6 @@
 
 #include <cstdlib>
 #include <ctime>
-#include <functional>
 
 Grid::Grid() {
   for (int i = 0; i < 4; i++)
@@ -12,109 +11,99 @@ Grid::Grid() {
 bool Grid::move(Direction dir) {
   bool moved = false;
 
-  // Helper lambdas for sliding
-  std::function<void()> slideLeft = [&]() {
-    for (int i = 0; i < 4; i++) {
-      int target = 0;
-      for (int j = 0; j < 4; j++) {
-        if (tiles[i][j] != nullptr) {
-          if (j != target) {
-            tiles[i][target] = tiles[i][j];
-            tiles[i][target]->setPosition(i, target);
-            tiles[i][j] = nullptr;
-            moved = true;
-          }
-          target++;
-        }
-      }
-    }
-  };
-  std::function<void()> slideRight = [&]() {
-    for (int i = 0; i < 4; i++) {
-      int target = 3;
-      for (int j = 3; j >= 0; j--) {
-        if (tiles[i][j] != nullptr) {
-          if (j != target) {
-            tiles[i][target] = tiles[i][j];
-            tiles[i][target]->setPosition(i, target);
-            tiles[i][j] = nullptr;
-            moved = true;
-          }
-          target--;
-        }
-      }
-    }
-  };
-  std::function<void()> slideUp = [&]() {
-    for (int j = 0; j < 4; j++) {
-      int target = 0;
-      for (int i = 0; i < 4; i++) {
-        if (tiles[i][j] != nullptr) {
-          if (i != target) {
-            tiles[target][j] = tiles[i][j];
-            tiles[target][j]->setPosition(target, j);
-            tiles[i][j] = nullptr;
-            moved = true;
-          }
-          target++;
-        }
-      }
-    }
-  };
-  std::function<void()> slideDown = [&]() {
-    for (int j = 0; j < 4; j++) {
-      int target = 3;
-      for (int i = 3; i >= 0; i--) {
-        if (tiles[i][j] != nullptr) {
-          if (i != target) {
-            tiles[target][j] = tiles[i][j];
-            tiles[target][j]->setPosition(target, j);
-            tiles[i][j] = nullptr;
-            moved = true;
-          }
-          target--;
-        }
-      }
-    }
-  };
-
-  // 1. Slide
-  switch (dir) {
-    case Direction::LEFT:
-      slideLeft();
-      break;
-    case Direction::RIGHT:
-      slideRight();
-      break;
-    case Direction::UP:
-      slideUp();
-      break;
-    case Direction::DOWN:
-      slideDown();
-      break;
-  }
-
-  // 2. Merge
+  slideTiles(dir, moved);
   mergeTiles(dir);
 
   // 3. Slide again to fill gaps from merges
-
-  switch (dir) {
-    case Direction::LEFT:
-      slideLeft();
-      break;
-    case Direction::RIGHT:
-      slideRight();
-      break;
-    case Direction::UP:
-      slideUp();
-      break;
-    case Direction::DOWN:
-      slideDown();
-      break;
-  }
+  slideTiles(dir, moved);
 
   return moved;
+}
+
+void Grid::slideTiles(Direction dir, bool& moved) {
+  switch (dir) {
+    case Direction::LEFT:
+      slideLeft(moved);
+      break;
+    case Direction::RIGHT:
+      slideRight(moved);
+      break;
+    case Direction::UP:
+      slideUp(moved);
+      break;
+    case Direction::DOWN:
+      slideDown(moved);
+      break;
+  }
+}
+
+// --- Slide helpers ---
+void Grid::slideLeft(bool& moved) {
+  for (int i = 0; i < 4; i++) {
+    int target = 0;
+    for (int j = 0; j < 4; j++) {
+      if (tiles[i][j] != nullptr) {
+        if (j != target) {
+          tiles[i][target] = tiles[i][j];
+          tiles[i][target]->setPosition(i, target);
+          tiles[i][j] = nullptr;
+          moved = true;
+        }
+        target++;
+      }
+    }
+  }
+}
+
+void Grid::slideRight(bool& moved) {
+  for (int i = 0; i < 4; i++) {
+    int target = 3;
+    for (int j = 3; j >= 0; j--) {
+      if (tiles[i][j] != nullptr) {
+        if (j != target) {
+          tiles[i][target] = tiles[i][j];
+          tiles[i][target]->setPosition(i, target);
+          tiles[i][j] = nullptr;
+          moved = true;
+        }
+        target--;
+      }
+    }
+  }
+}
+
+void Grid::slideUp(bool& moved) {
+  for (int j = 0; j < 4; j++) {
+    int target = 0;
+    for (int i = 0; i < 4; i++) {
+      if (tiles[i][j] != nullptr) {
+        if (i != target) {
+          tiles[target][j] = tiles[i][j];
+          tiles[target][j]->setPosition(target, j);
+          tiles[i][j] = nullptr;
+          moved = true;
+        }
+        target++;
+      }
+    }
+  }
+}
+
+void Grid::slideDown(bool& moved) {
+  for (int j = 0; j < 4; j++) {
+    int target = 3;
+    for (int i = 3; i >= 0; i--) {
+      if (tiles[i][j] != nullptr) {
+        if (i != target) {
+          tiles[target][j] = tiles[i][j];
+          tiles[target][j]->setPosition(target, j);
+          tiles[i][j] = nullptr;
+          moved = true;
+        }
+        target--;
+      }
+    }
+  }
 }
 
 bool Grid::isCellEmpty() const {
@@ -180,7 +169,7 @@ void Grid::addRandomTile() {
 
 // rendering is now handled by GridView
 
-void Grid::moveLeft() {
+void Grid::mergeLeft() {
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < 3; j++) {
       if (tiles[i][j] != nullptr && tiles[i][j + 1] != nullptr &&
@@ -193,7 +182,7 @@ void Grid::moveLeft() {
   }
 }
 
-void Grid::moveRight() {
+void Grid::mergeRight() {
   for (int i = 0; i < 4; i++) {
     for (int j = 3; j > 0; j--) {
       if (tiles[i][j] != nullptr && tiles[i][j - 1] != nullptr &&
@@ -206,7 +195,7 @@ void Grid::moveRight() {
   }
 }
 
-void Grid::moveUp() {
+void Grid::mergeUp() {
   for (int j = 0; j < 4; j++) {
     for (int i = 0; i < 3; i++) {
       if (tiles[i][j] != nullptr && tiles[i + 1][j] != nullptr &&
@@ -219,7 +208,7 @@ void Grid::moveUp() {
   }
 }
 
-void Grid::moveDown() {
+void Grid::mergeDown() {
   for (int j = 0; j < 4; j++) {
     for (int i = 3; i > 0; i--) {
       if (tiles[i][j] != nullptr && tiles[i - 1][j] != nullptr &&
@@ -235,20 +224,19 @@ void Grid::moveDown() {
 void Grid::mergeTiles(Direction dir) {
   switch (dir) {
     case Direction::LEFT:
-      this->moveLeft();
+      this->mergeLeft();
       break;
 
     case Direction::RIGHT:
-      this->moveRight();
+      this->mergeRight();
       break;
 
     case Direction::UP:
-      this->moveUp();
+      this->mergeUp();
       break;
 
     case Direction::DOWN:
-      this->moveDown();
-
+      this->mergeDown();
       break;
   }
 }
