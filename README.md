@@ -127,10 +127,6 @@ docker-compose up
 - [x] Loss detection (no more moves)
 - [x] End game messages display
 - [x] 🎯 "R" key to replay
-- [ ] 💾 Best score saving
-- [ ] 🎨 Color themes
-- [ ] 🔊 Sound effects
-- [ ] 📱 Mobile version
 
 ## 🤝 Contribution
 
