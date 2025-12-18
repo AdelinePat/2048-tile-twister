@@ -14,7 +14,13 @@ class Grid {
  public:
   Grid();
   bool move(Direction dir);
+  bool isCellEmpty() const;
+  bool canMerge() const;
   bool canMove() const;
+  void moveLeft();
+  void moveRight();
+  void moveUp();
+  void moveDown();
   void mergeTiles(Direction dir);
   void addTile(Tile* tile);
   void addRandomTile();
