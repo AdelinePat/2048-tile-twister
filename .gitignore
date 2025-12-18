@@ -49,3 +49,8 @@
 **/*SDL3
 
 **/*.vscode
+
+**/*.idea
+.idea
+
+**/*cmake-build-debug
