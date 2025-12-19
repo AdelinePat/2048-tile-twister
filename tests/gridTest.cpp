@@ -23,7 +23,7 @@ TEST_CASE("Grid initializes empty") {
     }
   }
 
-  CHECK_MESSAGE(grid.isCellEmpty() == true, "Grid should have empty cells");
+  CHECK_MESSAGE(grid.hasEmptyCell() == true, "Grid should have empty cells");
   CHECK_MESSAGE(grid.canMove() == true, "Empty grid should allow moves");
   
   std::cout << "  ✓ Grid initializes correctly" << std::endl;
@@ -176,7 +176,7 @@ TEST_CASE("Grid canMove returns false when grid is full and no merges possible")
     }
   }
 
-  CHECK_MESSAGE(grid.isCellEmpty() == false, "Grid should be full");
+  CHECK_MESSAGE(grid.hasEmptyCell() == false, "Grid should be full");
   CHECK_MESSAGE(grid.canMerge() == false, "No adjacent tiles can merge");
   CHECK_MESSAGE(grid.canMove() == false, "Game should be over");
   
@@ -202,7 +202,7 @@ TEST_CASE("Grid canMove returns true when merges are possible") {
     }
   }
 
-  CHECK_MESSAGE(grid.isCellEmpty() == false, "Grid should be full");
+  CHECK_MESSAGE(grid.hasEmptyCell() == false, "Grid should be full");
   CHECK_MESSAGE(grid.canMerge() == true, "Adjacent 2s should be mergeable");
   CHECK_MESSAGE(grid.canMove() == true, "Game should NOT be over");
   

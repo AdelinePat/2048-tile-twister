@@ -9,7 +9,6 @@ bool Game::isGameOver() const {
 }
 
 bool Game::hasWon() const {
-  if (won) return true;  // Once won, always won
   return grid.hasValue(2048);
 }
 

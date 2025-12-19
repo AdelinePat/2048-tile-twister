@@ -17,7 +17,7 @@ void GridView::render(SDL_Renderer* renderer) {
   SDL_SetRenderDrawColor(renderer, 180, 170, 160, 255);
   SDL_RenderFillRect(renderer, &rect);
   // Draw all tiles
-  for (auto& tile : tiles) {
+  for (TileView& tile : tiles) {
     tile.render(renderer);
   }
 }

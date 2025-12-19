@@ -30,7 +30,7 @@ TEST_CASE(
   //   game.setGrid(grid);
   game.setGrid(std::move(grid));
 
-  CHECK_MESSAGE(game.getGrid().isCellEmpty() == false, "Grid should be full");
+  CHECK_MESSAGE(game.getGrid().hasEmptyCell() == false, "Grid should be full");
   CHECK_MESSAGE(game.getGrid().canMerge() == false,
                 "No adjacent tiles should be able to merge");
   CHECK_MESSAGE(game.getGrid().canMove() == false,

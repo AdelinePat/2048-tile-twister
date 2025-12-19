@@ -1,15 +1,16 @@
 #include "grid.hpp"
+
 #include <cstdlib>
 #include <ctime>
 
 bool Grid::move(Direction dir) {
   bool moved = false;
   resetAllMergeStates();
-  
+
   slideTiles(dir, moved);
   mergeTiles(dir);
   slideTiles(dir, moved);
-  
+
   return moved;
 }
 
@@ -25,10 +26,18 @@ void Grid::resetAllMergeStates() {
 
 void Grid::slideTiles(Direction dir, bool& moved) {
   switch (dir) {
-    case Direction::LEFT:   slideLeft(moved);  break;
-    case Direction::RIGHT:  slideRight(moved); break;
-    case Direction::UP:     slideUp(moved);    break;
-    case Direction::DOWN:   slideDown(moved);  break;
+    case Direction::LEFT:
+      slideLeft(moved);
+      break;
+    case Direction::RIGHT:
+      slideRight(moved);
+      break;
+    case Direction::UP:
+      slideUp(moved);
+      break;
+    case Direction::DOWN:
+      slideDown(moved);
+      break;
   }
 }
 
@@ -99,7 +108,7 @@ void Grid::slideDown(bool& moved) {
 void Grid::mergeLeft() {
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < 3; j++) {
-      if (tiles[i][j] && tiles[i][j + 1] && 
+      if (tiles[i][j] && tiles[i][j + 1] &&
           tiles[i][j]->canMergeWith(tiles[i][j + 1].get())) {
         tiles[i][j]->doubleValue();
         tiles[i][j]->setMerged(true);
@@ -112,7 +121,7 @@ void Grid::mergeLeft() {
 void Grid::mergeRight() {
   for (int i = 0; i < 4; i++) {
     for (int j = 3; j > 0; j--) {
-      if (tiles[i][j] && tiles[i][j - 1] && 
+      if (tiles[i][j] && tiles[i][j - 1] &&
           tiles[i][j]->canMergeWith(tiles[i][j - 1].get())) {
         tiles[i][j]->doubleValue();
         tiles[i][j]->setMerged(true);
@@ -125,7 +134,7 @@ void Grid::mergeRight() {
 void Grid::mergeUp() {
   for (int j = 0; j < 4; j++) {
     for (int i = 0; i < 3; i++) {
-      if (tiles[i][j] && tiles[i + 1][j] && 
+      if (tiles[i][j] && tiles[i + 1][j] &&
           tiles[i][j]->canMergeWith(tiles[i + 1][j].get())) {
         tiles[i][j]->doubleValue();
         tiles[i][j]->setMerged(true);
@@ -138,7 +147,7 @@ void Grid::mergeUp() {
 void Grid::mergeDown() {
   for (int j = 0; j < 4; j++) {
     for (int i = 3; i > 0; i--) {
-      if (tiles[i][j] && tiles[i - 1][j] && 
+      if (tiles[i][j] && tiles[i - 1][j] &&
           tiles[i][j]->canMergeWith(tiles[i - 1][j].get())) {
         tiles[i][j]->doubleValue();
         tiles[i][j]->setMerged(true);
@@ -150,14 +159,22 @@ void Grid::mergeDown() {
 
 void Grid::mergeTiles(Direction dir) {
   switch (dir) {
-    case Direction::LEFT:   mergeLeft();  break;
-    case Direction::RIGHT:  mergeRight(); break;
-    case Direction::UP:     mergeUp();    break;
-    case Direction::DOWN:   mergeDown();  break;
+    case Direction::LEFT:
+      mergeLeft();
+      break;
+    case Direction::RIGHT:
+      mergeRight();
+      break;
+    case Direction::UP:
+      mergeUp();
+      break;
+    case Direction::DOWN:
+      mergeDown();
+      break;
   }
 }
 
-bool Grid::isCellEmpty() const {
+bool Grid::hasEmptyCell() const {
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < 4; j++) {
       if (!tiles[i][j]) return true;
@@ -180,9 +197,7 @@ bool Grid::canMerge() const {
   return false;
 }
 
-bool Grid::canMove() const {
-  return isCellEmpty() || canMerge();
-}
+bool Grid::canMove() const { return hasEmptyCell() || canMerge(); }
 
 bool Grid::hasValue(int targetValue) const {
   for (int i = 0; i < 4; i++) {
@@ -218,16 +233,20 @@ void Grid::addTile(Tile* tile) {
 }
 
 void Grid::addRandomTile() {
-  auto emptyCells = getEmptyCells();
-  
+  std::vector<std::pair<int, int>> emptyCells = getEmptyCells();
+
   if (!emptyCells.empty()) {
     static bool seeded = false;
     if (!seeded) {
       std::srand(static_cast<unsigned int>(std::time(nullptr)));
       seeded = true;
     }
-    
-    auto [i, j] = emptyCells[std::rand() % emptyCells.size()];
+
+    std::pair<int, int> randomCell =
+        emptyCells[std::rand() % emptyCells.size()];
+    int i = randomCell.first;
+    int j = randomCell.second;
+
     int val = (std::rand() % 10 < 9) ? 2 : 4;
     tiles[i][j] = std::make_unique<Tile>(val, i, j);
   }
