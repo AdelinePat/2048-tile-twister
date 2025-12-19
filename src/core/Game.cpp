@@ -1,6 +1,5 @@
 #include "game.hpp"
 
-// bool Game::move(Direction dir) { return grid.move(dir); }
 
 void Game::addRandomTile() { grid.addRandomTile(); }
 
@@ -23,15 +22,25 @@ Grid& Game::getGrid() { return grid; }
 
 
 void Game::move(Direction dir) {
+    // 1. First slide: compress all tiles toward the chosen direction
     bool moved = grid.move(dir);
+
+    // 2. Merge: combine adjacent tiles with the same value
+    //    (each tile can merge only once per move)
     grid.mergeTiles(dir);
+
+    // 3. Second slide: after merging, gaps appear → compress again
     bool movedAfterMerge = grid.move(dir);
-    if(moved || movedAfterMerge) {
+
+    // 4. If anything moved or merged, spawn a new tile
+    if (moved || movedAfterMerge) {
         addRandomTile();
     }
-    // if (grid.move(dir)) {
+
+     // if (grid.move(dir)) {
     //     grid.mergeTiles(dir);   
     //     grid.move(dir);         
     //     addRandomTile();        
     // }
 }
+

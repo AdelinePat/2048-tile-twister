@@ -106,12 +106,7 @@ bool Grid::canMerge() const {
 }
 
 bool Grid::canMove() const {
-  // Case vide ?
-  // bool empty = isCellEmpty();
-  // if (isCellEmpty()) {
-  //   return true;
-  // }
-  // return canMerge();
+
   return isCellEmpty() || canMerge();
 }
 
@@ -141,7 +136,7 @@ void Grid::addRandomTile() {
   }
 }
 
-// rendering is now handled by GridView
+
 
 void Grid::moveLeft() {
   for (int i = 0; i < 4; i++) {
