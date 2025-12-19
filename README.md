@@ -14,7 +14,7 @@
 [Architecture](#-architecture) •
 [Roadmap](#-roadmap)
 
-![2048](img/2048_win.png)
+![2048](assets/img/2048_win.png)
 
 </div>
 
@@ -154,7 +154,7 @@ This project was made by:
 
 <div align="center">
 
-![2048_loose](img/2048_loose.png)
+![2048_loose](assets/img/2048_loose.png)
 
 </div>  
   
