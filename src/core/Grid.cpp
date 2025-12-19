@@ -11,73 +11,97 @@ Grid::Grid() {
 bool Grid::move(Direction dir) {
   bool moved = false;
 
-  auto slideAndMerge = [&](auto get, auto set) {
-    for (int i = 0; i < 4; ++i) {
-      // Slide tiles
-      int pos = 0;
-      for (int j = 0; j < 4; ++j) {
-        Tile* t = get(i, j);
-        if (t) {
-          if (j != pos) {
-            set(i, pos, t);
-            set(i, j, nullptr);
-            t->setPosition(
-                (dir == Direction::LEFT || dir == Direction::RIGHT) ? i : pos,
-                (dir == Direction::LEFT || dir == Direction::RIGHT) ? pos : i);
-            moved = true;
-          }
-          pos++;
-        }
-      }
-      // Merge tiles
-      for (int j = 0; j < 3; ++j) {
-        Tile* t1 = get(i, j);
-        Tile* t2 = get(i, j + 1);
-        if (t1 && t2 && t1->getValue() == t2->getValue()) {
-          t1->setValue(t1->getValue() * 2);
-          delete t2;
-          set(i, j + 1, nullptr);
-          moved = true;
-        }
-      }
-      // Slide again after merge
-      pos = 0;
-      for (int j = 0; j < 4; ++j) {
-        Tile* t = get(i, j);
-        if (t) {
-          if (j != pos) {
-            set(i, pos, t);
-            set(i, j, nullptr);
-            t->setPosition(
-                (dir == Direction::LEFT || dir == Direction::RIGHT) ? i : pos,
-                (dir == Direction::LEFT || dir == Direction::RIGHT) ? pos : i);
-          }
-          pos++;
-        }
-      }
-    }
-  };
-
-  switch (dir) {
-    case Direction::LEFT:
-      slideAndMerge([&](int i, int j) { return tiles[i][j]; },
-                    [&](int i, int j, Tile* t) { tiles[i][j] = t; });
-      break;
-    case Direction::RIGHT:
-      slideAndMerge([&](int i, int j) { return tiles[i][3 - j]; },
-                    [&](int i, int j, Tile* t) { tiles[i][3 - j] = t; });
-      break;
-    case Direction::UP:
-      slideAndMerge([&](int i, int j) { return tiles[j][i]; },
-                    [&](int i, int j, Tile* t) { tiles[j][i] = t; });
-      break;
-    case Direction::DOWN:
-      slideAndMerge([&](int i, int j) { return tiles[3 - j][i]; },
-                    [&](int i, int j, Tile* t) { tiles[3 - j][i] = t; });
-      break;
-  }
+  slideTiles(dir, moved);
+  mergeTiles(dir);
+  slideTiles(dir, moved); // Slide again to fill gaps from merges
 
   return moved;
+}
+
+void Grid::slideTiles(Direction dir, bool& moved) {
+  switch (dir) {
+    case Direction::LEFT:
+      slideLeft(moved);
+      break;
+    case Direction::RIGHT:
+      slideRight(moved);
+      break;
+    case Direction::UP:
+      slideUp(moved);
+      break;
+    case Direction::DOWN:
+      slideDown(moved);
+      break;
+  }
+}
+
+// --- Slide helpers ---
+void Grid::slideLeft(bool& moved) {
+  for (int i = 0; i < 4; i++) {
+    int target = 0;
+    for (int j = 0; j < 4; j++) {
+      if (tiles[i][j] != nullptr) {
+        if (j != target) {
+          tiles[i][target] = tiles[i][j];
+          tiles[i][target]->setPosition(i, target);
+          tiles[i][j] = nullptr;
+          moved = true;
+        }
+        target++;
+      }
+    }
+  }
+}
+
+void Grid::slideRight(bool& moved) {
+  for (int i = 0; i < 4; i++) {
+    int target = 3;
+    for (int j = 3; j >= 0; j--) {
+      if (tiles[i][j] != nullptr) {
+        if (j != target) {
+          tiles[i][target] = tiles[i][j];
+          tiles[i][target]->setPosition(i, target);
+          tiles[i][j] = nullptr;
+          moved = true;
+        }
+        target--;
+      }
+    }
+  }
+}
+
+void Grid::slideUp(bool& moved) {
+  for (int j = 0; j < 4; j++) {
+    int target = 0;
+    for (int i = 0; i < 4; i++) {
+      if (tiles[i][j] != nullptr) {
+        if (i != target) {
+          tiles[target][j] = tiles[i][j];
+          tiles[target][j]->setPosition(target, j);
+          tiles[i][j] = nullptr;
+          moved = true;
+        }
+        target++;
+      }
+    }
+  }
+}
+
+void Grid::slideDown(bool& moved) {
+  for (int j = 0; j < 4; j++) {
+    int target = 3;
+    for (int i = 3; i >= 0; i--) {
+      if (tiles[i][j] != nullptr) {
+        if (i != target) {
+          tiles[target][j] = tiles[i][j];
+          tiles[target][j]->setPosition(target, j);
+          tiles[i][j] = nullptr;
+          moved = true;
+        }
+        target--;
+      }
+    }
+  }
 }
 
 bool Grid::isCellEmpty() const {
@@ -106,7 +130,6 @@ bool Grid::canMerge() const {
 }
 
 bool Grid::canMove() const {
-
   return isCellEmpty() || canMerge();
 }
 
@@ -138,7 +161,7 @@ void Grid::addRandomTile() {
 
 
 
-void Grid::moveLeft() {
+void Grid::mergeLeft() {
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < 3; j++) {
       if (tiles[i][j] != nullptr && tiles[i][j + 1] != nullptr &&
@@ -151,7 +174,7 @@ void Grid::moveLeft() {
   }
 }
 
-void Grid::moveRight() {
+void Grid::mergeRight() {
   for (int i = 0; i < 4; i++) {
     for (int j = 3; j > 0; j--) {
       if (tiles[i][j] != nullptr && tiles[i][j - 1] != nullptr &&
@@ -164,7 +187,7 @@ void Grid::moveRight() {
   }
 }
 
-void Grid::moveUp() {
+void Grid::mergeUp() {
   for (int j = 0; j < 4; j++) {
     for (int i = 0; i < 3; i++) {
       if (tiles[i][j] != nullptr && tiles[i + 1][j] != nullptr &&
@@ -177,7 +200,7 @@ void Grid::moveUp() {
   }
 }
 
-void Grid::moveDown() {
+void Grid::mergeDown() {
   for (int j = 0; j < 4; j++) {
     for (int i = 3; i > 0; i--) {
       if (tiles[i][j] != nullptr && tiles[i - 1][j] != nullptr &&
@@ -193,20 +216,19 @@ void Grid::moveDown() {
 void Grid::mergeTiles(Direction dir) {
   switch (dir) {
     case Direction::LEFT:
-      this->moveLeft();
+      this->mergeLeft();
       break;
 
     case Direction::RIGHT:
-      this->moveRight();
+      this->mergeRight();
       break;
 
     case Direction::UP:
-      this->moveUp();
+      this->mergeUp();
       break;
 
     case Direction::DOWN:
-      this->moveDown();
-
+      this->mergeDown();
       break;
   }
 }
