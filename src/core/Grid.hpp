@@ -1,33 +1,58 @@
-
-// #include <SDL3/SDL.h>
-
+#pragma once
+#include <memory>
 #include <vector>
-
 #include "tile.hpp"
 
 enum class Direction { UP, DOWN, LEFT, RIGHT };
 
 class Grid {
  private:
-  Tile* tiles[4][4];
+  std::unique_ptr<Tile> tiles[4][4];
+  
+  // Sliding operations
   void slideTiles(Direction dir, bool& moved);
   void slideLeft(bool& moved);
   void slideRight(bool& moved);
   void slideUp(bool& moved);
   void slideDown(bool& moved);
+  
+  // Merging operations
   void mergeLeft();
   void mergeRight();
   void mergeUp();
   void mergeDown();
+  
+  // Helper methods
+  void resetAllMergeStates();
+  std::vector<std::pair<int, int>> getEmptyCells() const;
 
  public:
-  Grid();
+  Grid() = default;
+  ~Grid() = default;
+  
+  // Smart pointers handle copying/moving automatically
+  Grid(Grid&&) = default;
+  Grid& operator=(Grid&&) = default;
+  
+  // Disable copying (or implement deep copy if needed)
+  Grid(const Grid&) = delete;
+  Grid& operator=(const Grid&) = delete;
+  
+  // Game operations
   bool move(Direction dir);
+  void mergeTiles(Direction dir);
+  
+  // Tile management
+  void addTile(Tile* tile);  // Takes ownership
+  void addRandomTile();
+  Tile* getTile(int i, int j) const { return tiles[i][j].get(); }
+  
+  // Game state queries
   bool isCellEmpty() const;
   bool canMerge() const;
   bool canMove() const;
-  void addTile(Tile* tile);
-  void addRandomTile();
-  Tile* getTile(int i, int j) const { return tiles[i][j]; }
-  void mergeTiles(Direction dir);
+  bool hasValue(int targetValue) const;
+  
+  // Utility
+  void clear();
 };

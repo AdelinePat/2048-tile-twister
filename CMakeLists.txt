@@ -35,7 +35,8 @@ target_include_directories(${APP_NAME}_core PUBLIC
 # ==================================================
 if(NOT CMAKE_CROSSCOMPILING OR BUILD_TESTS_ONLY)
     add_executable(test
-        tests/testMain.cpp
+        tests/gameTest.cpp
+        tests/gridTest.cpp
     )
 
     # Link to core library
