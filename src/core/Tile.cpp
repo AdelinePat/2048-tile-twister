@@ -1,7 +1,7 @@
 #include "tile.hpp"
 
-Tile::Tile(int v, int posX, int posY)
-    : value(v), x(posX), y(posY), merged(false) {}
+Tile::Tile(int value, int posX, int posY)
+    : value(value), x(posX), y(posY), merged(false) {}
 
 int Tile::getValue() const { return value; }
 

@@ -251,11 +251,3 @@ void Grid::addRandomTile() {
     tiles[i][j] = std::make_unique<Tile>(val, i, j);
   }
 }
-
-void Grid::clear() {
-  for (int i = 0; i < 4; i++) {
-    for (int j = 0; j < 4; j++) {
-      tiles[i][j].reset();  // Deletes and sets to nullptr
-    }
-  }
-}

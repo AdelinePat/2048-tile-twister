@@ -55,5 +55,5 @@ class Grid {
   bool hasValue(int targetValue) const;
 
   // Utility
-  void clear();
+  // void clear();
 };
